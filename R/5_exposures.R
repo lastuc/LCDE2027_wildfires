@@ -90,6 +90,9 @@ expo23 <- expo_aggr(paste0(pathroot, "data/processed/assembled/data_2023.csv"), 
 expo24 <- expo_aggr(paste0(pathroot, "data/processed/assembled/data_2024.csv"), 2024)
 expo25 <- expo_aggr(paste0(pathroot, "data/processed/assembled/data_2025.csv"), 2025)
 
+
+# 3. Saving ----
+
 # Yearly exposure and risk by NUTS 2, population-weighted + spatial average
 expo_nuts2 <- bind_rows(expo03[[1]], expo04[[1]], expo05[[1]], expo06[[1]], expo07[[1]],
                         expo08[[1]], expo09[[1]], expo10[[1]], expo11[[1]], expo12[[1]],
