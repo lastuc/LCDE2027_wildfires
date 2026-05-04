@@ -1,19 +1,14 @@
 #-----------------------------------------------------------------------------#
-#                  Population-weighted exposures, RR and PAFs                 #
+#                 6. Population-weighted exposures, RR and PAFs               #
 #-----------------------------------------------------------------------------#
 
-library(tidyverse)
-library(data.table)
-library(here)
 
-
-pathroot <- ""
-# pathroot <- "/PROJECTES/AIRPOLLUTION/lara/LCDE2027_wildfires/"
+pathroot <- "/PROJECTES/AIRPOLLUTION/lara/LCDE2027_wildfires/"
 
 
 # 1. RR by Anna Alari ----
 
-# lag0: 1.008 (95% CI 1.006-1.010) per 1ug/m3 increment increase
+# lag0: 1.008 (95% CI 1.006-1.010) per 1 ug/m3 increment increase
 set.seed(1234)
 point_RR10 <- 1.008^10
 nsim <- 200
@@ -33,17 +28,10 @@ hia <- function(expofile, pRR10 = point_RR10, sRR10 = sim_RR10, mort = mortality
 
   # Read exposure data, delete cells with no population
   expodata <- read_csv(expofile)
-  # expodata18 <- read_csv(paste0(pathroot, "data/processed/assembled/data_2018.csv"))
   
   expodata <- expodata[,c("NUTS_mort", "NUTS_0", "EEA_subregion", "date", "population", "pm25")]
   setnames(expodata, "EEA_subregion", "region")
-  # expodata <- expodata[population > 0]
   expodata <- expodata %>% filter(population > 0)
-  
-  # # expodata <- expodata[c("NUTS_mort", "NUTS_0", "EEA_subregion", "date", "population", "pm25")]
-  # expodata <- expodata[,c("NUTS_mort", "NUTS_0", "EEA_subregion", "date", "population", "pm25")]
-  # expodata[, region := EEA_subregion] 
-  # expodata <- expodata[population > 0]
   
   # Checks
   if(any(tapply(expodata$population, expodata$NUTS_mort, sum) == 0)){
@@ -136,12 +124,6 @@ hia <- function(expofile, pRR10 = point_RR10, sRR10 = sim_RR10, mort = mortality
   mort_region_year$attrupper <-
     apply(dplyr::select(mort_region_year, starts_with("attr_")), 1,
           function(x) quantile(x, 0.975, na.rm=T))
-  # mort_eu_year$attrlower <-
-  #   apply(dplyr::select(mort_eu_year, starts_with("attr_")), 1,
-  #         function(x) quantile(x, 0.025, na.rm=T))
-  # mort_eu_year$attrupper <-
-  #   apply(dplyr::select(mort_eu_year, starts_with("attr_")), 1,
-  #         function(x) quantile(x, 0.975, na.rm=T))
   mort_euro_year$attrlower <-
     apply(dplyr::select(mort_euro_year, starts_with("attr_")), 1,
           function(x) quantile(x, 0.025, na.rm=T))
@@ -230,14 +212,6 @@ attributable_region <- bind_rows(hia03[[3]], hia04[[3]], hia05[[3]], hia06[[3]],
                                  hia18[[3]], hia19[[3]], hia20[[3]], hia21[[3]], hia22[[3]], 
                                  hia23[[3]], hia24[[3]], hia25[[3]])
 write_csv(attributable_region, paste0(pathroot, "data/processed/attributable_region.csv"))
-
-# # Attributable mortality the EU
-# attr_eu <- bind_rows(hia03[[4]], hia04[[4]], hia05[[4]], hia06[[4]], hia07[[4]],
-#                      hia08[[4]], hia09[[4]], hia10[[4]], hia11[[4]], hia12[[4]],
-#                      hia13[[4]], hia14[[4]], hia15[[4]], hia16[[4]], hia17[[4]],
-#                      hia18[[4]], hia19[[4]], hia20[[4]], hia21[[4]], hia22[[4]], 
-#                      hia23[[4]], hia24[[4]], hia25[[4]])
-# write_csv(attr_eu, paste0(pathroot, "data/processed/attributable_eu.csv"))
 
 # Attributable mortality euro
 attr_euro <- bind_rows(hia03[[4]], hia04[[4]], hia05[[4]], hia06[[4]], hia07[[4]],
