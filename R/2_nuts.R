@@ -3,14 +3,7 @@
 #-----------------------------------------------------------------------------#
 
 
-library(sf)
-library(terra)
-library(dplyr)
-library(rio)
-library(here)
-
 # pathroot <- "/PROJECTES/AIRPOLLUTION/lara/LCDE2027_wildfires/"
-pathroot <- ""
 
 
 # 1. Read and split by NUTS level ----
@@ -47,10 +40,10 @@ nuts_2 <- dplyr::bind_rows(nuts_2 %>% filter(!NUTS_2 %in% c("PT16", "PT18")), PT
 # save adapted NUTS2 shapefile for figures
 st_write(nuts_2, "data/processed/nuts_2.shp", delete_layer = T)
 
+
 # 2. Merge with grid ----
 
 # Exposure boundaries
-# gridgeom <- rast(paste0(pathroot, "data/raw/SILAM/europePMfire_2003to2024daymean.nc4"), lyrs = 1) # replace with new SILAM data
 gridgeom <- rast("data/raw/SILAM/europeFirePM25-MODIS-2003to2025DayMean.nc4", lyrs = 1)
 expo_polys <- st_as_sf(as.polygons(gridgeom, trunc = F, dissolve = F)) |>
   mutate(GRD_ID = 1:n()) |>
@@ -79,8 +72,6 @@ expo_points <- group_by(expo_points, NUTS_2) |>
 
 # 3. Add region IDs ---- # in 2024: United Kindom (UK) is removed and Kosovo (XB) is new in NUTS_0
 
-# euroregions <- import(paste0(pathroot, "data/raw/regions/[LCDE 2026] Country names and groupings.xlsx"), skip=1) |>
-#   dplyr::select(1,4,5,9) 
 euroregions <- import(paste0(pathroot, "data/raw/regions/2027 Country names and groupings -2.xlsx"), skip=1) |>
     dplyr::select(1,4,6,8,9,10,11)
 euroregions <- euroregions[!duplicated(euroregions),]
