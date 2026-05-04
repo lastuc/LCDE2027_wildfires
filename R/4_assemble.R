@@ -5,19 +5,22 @@
 pathroot <- "/PROJECTES/AIRPOLLUTION/lara/LCDE2027_wildfires/"
 
 
-# Assign areas, exposure by grid of population for each day ----
+# 1. Read data ----
 
-# Read data
 pointnuts <- vect(paste0(pathroot, "data/processed/expocentroids_nuts.gpkg"))
 dfnuts <- as.data.frame(pointnuts)
 population <- rast(paste0(pathroot, "data/processed/population_yearly.tif"))
 population <- subset(population, names(population) != "year")
 names(population) <- as.character(c(2003:2025))
 
-# Create date sequence
+
+# 2. Create date sequence ----
+
 dayseq <- seq.Date(as.Date("2003-01-01"), as.Date("2025-12-31"), by = "1 day")
 
-# Extract geographical IDs, population, SILAM for each day-cell per year
+
+# 3. Function to extract geographical IDs, population, SILAM for each day-cell per year and save ----
+
 for(y in 2003:2025){
 
   print(y)
