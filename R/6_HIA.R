@@ -163,7 +163,7 @@ hia <- function(expofile, pRR10 = point_RR10, sRR10 = sim_RR10, mort = mortality
 }
 
 
-# 4. Execute  ----
+# 4. Execute  and save ----
 
 hia03 <- hia(paste0(pathroot, "data/processed/assembled/data_2003.csv"))
 hia04 <- hia(paste0(pathroot, "data/processed/assembled/data_2004.csv"))
