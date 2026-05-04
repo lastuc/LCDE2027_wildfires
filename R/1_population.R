@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------------------#
-#           Clean GEOSTAT gridded population data and create rasters          #
+#         1. Clean GEOSTAT gridded population data and create rasters         #
 #-----------------------------------------------------------------------------#
 
 
