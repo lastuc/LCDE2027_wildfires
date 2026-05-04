@@ -14,15 +14,18 @@ pop06_geom <-
   read_sf(paste0(pathroot, "data/raw/population/2006/Grid_ETRS89_LAEA_1K_ref_GEOSTAT_2006.shp"),
           quiet = T) |>
   rename(GRD_ID = GRD_INSPIR)
+
 # Read population counts
 pop06_counts <-
   read_delim(paste0(pathroot, "data/raw/population/2006/GEOSTAT_grid_EU_POP_2006_1K_V1_1_1.csv"),
              delim=";") |>
   dplyr::select(GRD_ID, POP_TOT) |>
   rename(POP06 = POP_TOT)
+
 # Merge the two sources of information
 pop06 <- left_join(pop06_geom, pop06_counts, by = "GRD_ID")
 rm("pop06_geom", "pop06_counts")
+
 # To centroids and WGS84
 pop06 <- st_centroid(pop06)
 pop06 <- st_transform(pop06, crs = 4326)
@@ -33,20 +36,24 @@ pop06 <- st_transform(pop06, crs = 4326)
 # Read polygon grid geometries
 pop11_geom <-
   read_sf(paste0(pathroot, "data/raw/population/2011/GEOSTATReferenceGrid/Grid_ETRS89_LAEA_1K-ref_GEOSTAT_POP_2011_V2_0_1.shp"),
-          quiet = TRUE)
+          quiet = T)
+
 # Read population counts, there may be duplicated if a cell is part of several countries
 pop11_counts <- read_csv(paste0(pathroot, "data/raw/population/2011/GEOSTAT_grid_POP_1K_2011_V2_0_1.csv"))  |>
   dplyr::select(GRD_ID, TOT_P) |>
   rename(POP11 = TOT_P)
+
 # Read modelled population counts
 pop11_modcounts <- read_csv(paste0(pathroot, "data/raw/population/2011/JRC-GHSL_AIT-grid-POP_1K_2011.csv"))  |>
   dplyr::select(GRD_ID, TOT_P) |>
   rename(POP11 = TOT_P) |>
   filter(!GRD_ID %in% pop11_counts$GRD_ID) # Remove if available in the non-modelled dataset
 pop11_counts <- bind_rows(pop11_counts, pop11_modcounts)
+
 # Merge the two sources of information
 pop11 <- left_join(pop11_geom, pop11_counts, by = "GRD_ID")
 rm("pop11_geom", "pop11_counts", "pop11_modcounts")
+
 # To centroids and WGS84
 pop11 <- st_centroid(pop11)
 pop11 <- st_transform(pop11, crs = 4326)
@@ -58,6 +65,7 @@ pop11 <- st_transform(pop11, crs = 4326)
 pop18 <- read_sf(paste0(pathroot, "data/raw/population/2018/JRC_POPULATION_2018.shp")) |>
   dplyr::select(GRD_ID, TOT_P_2018) |>
   rename(POP18 = TOT_P_2018)
+
 # To centroids and WGS84
 pop18 <- st_centroid(pop18)
 pop18 <- st_transform(pop18, crs = 4326)
@@ -69,6 +77,7 @@ pop18 <- st_transform(pop18, crs = 4326)
 pop21 <- st_read(paste0(pathroot, "data/raw/population/2021/ESTAT_Census_2021_V2.gpkg")) |>
   dplyr::select(GRD_ID, `T`) |>
   rename(POP21 = `T`)
+
 # To centroids and WGS84
 pop21 <- st_centroid(pop21)
 pop21 <- st_transform(pop21, crs = 4326)
