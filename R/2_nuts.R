@@ -97,7 +97,7 @@ expo_points$NUTS_mort <- ifelse(expo_points$NUTS_0 %in% c("DE", "IE", "HR", "SI"
 expo_points$NUTS_1 <- NULL
 
 
-# 5. Write ----
+# 5. Save ----
 
 write_sf(expo_points, paste0(pathroot, "data/processed/expocentroids_nuts.gpkg"))
 
