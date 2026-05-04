@@ -70,7 +70,9 @@ expo_points <- group_by(expo_points, NUTS_2) |>
   ungroup()
 
 
-# 3. Add region IDs ---- # in 2024: United Kindom (UK) is removed and Kosovo (XB) is new in NUTS_0
+# 3. Add region IDs ---- 
+
+# In 2024: United Kindom (UK) is removed and Kosovo (XB) is new in NUTS_0
 
 euroregions <- import(paste0(pathroot, "data/raw/regions/2027 Country names and groupings -2.xlsx"), skip=1) |>
     dplyr::select(1,4,6,8,9,10,11)
