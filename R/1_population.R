@@ -3,15 +3,7 @@
 #-----------------------------------------------------------------------------#
 
 
-library(sf)
-library(terra)
-library(readr)
-library(dplyr)
-library(stringr)
-library(here)
-
 # pathroot <- "/PROJECTES/AIRPOLLUTION/lara/LCDE2027_wildfires/"
-pathroot <- ""
 
 # 1. Clean ----
 
