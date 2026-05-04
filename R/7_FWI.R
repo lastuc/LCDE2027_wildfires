@@ -1,14 +1,12 @@
 #-----------------------------------------------------------------------------#
-#                             Process fire danger                             #
+#                          7. Process fire danger                             #
 #-----------------------------------------------------------------------------#
 
-library(tidyverse)
-library(terra)
-library(data.table)
-library(here)
 
-# pathroot <- "/PROJECTES/AIRPOLLUTION/lara/LCDE2027_wildfires/"
-pathroot <- ""
+pathroot <- "/PROJECTES/AIRPOLLUTION/lara/LCDE2027_wildfires/"
+
+
+# 1. Reading in and preparing data ----
 
 # exposure blueprint
 exposure <- rast(paste0(pathroot, "data/raw/SILAM/europeFirePM25-MODIS-2003to2025DayMean.nc4"))[[1]]
@@ -30,11 +28,13 @@ names(population) <- as.character(2003:2025)
 allFWI_nuts2 <- list()
 allFWI_country <- list()
 allFWI_region <- list()
-# allFWI_eu <- list()
 allFWI_euro <- list()
 
-for(y in 1980:2025){
 
+# 2. Function to combine, crop, population weighting and average ----
+
+for(y in 1980:2025){
+  
   print(y)
 
   # Read annual data, crop and average
@@ -82,14 +82,6 @@ for(y in 1980:2025){
                          by = .(region)]
   FWI_region$year <- y
   setDF(FWI_region)
-
-  # # Population and spatial averages: EU
-  # FWI_eu <- copy(ydata)
-  # FWI_eu[, popw := population/sum(population), by = .(eu)]
-  # FWI_eu <- FWI_eu[, .(FWI_pop = sum(popw*FWI), FWI_spatial = mean(FWI)),
-  #                  by = .(eu)]
-  # FWI_eu$year <- y
-  # setDF(FWI_eu)
   
   # Population and spatial averages: Europe
   FWI_euro <- copy(ydata)
@@ -106,10 +98,11 @@ for(y in 1980:2025){
   allFWI_euro[[as.character(y)]] <- FWI_euro
   rm("FWI_nuts2", "FWI_country", "FWI_region", "FWI_euro",
      "ypop", "ydata", "yFWI")
-
 }
 
-# Save to disk
+
+# 3. Save to disk ----
+
 allFWI_nuts2 <- do.call(rbind, allFWI_nuts2)
 write_csv(allFWI_nuts2, "data/processed/FWI_nuts2.csv")
 allFWI_country <- do.call(rbind, allFWI_country)
