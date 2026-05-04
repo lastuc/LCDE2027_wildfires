@@ -113,9 +113,9 @@ time(pop21_raster) <- 2021
 rm("pop21")
 
 ## GEOSTAT 2006 imputed  ----
-# Assign 2011 counts where no data is available in 2006, namely in the Balcans
+# Assign 2011 counts where no data is available in 2006, namely in the Balkans
 pop06_raster <- ifel(pop06_raster == 0, pop11_raster, pop06_raster)
-# Assign 2018 counts where no data is available in 2021, namely in the Balcans and Iceland
+# Assign 2018 counts where no data is available in 2021, namely in the Balkans and Iceland
 pop21_raster <- ifel(pop21_raster == 0, pop18_raster, pop21_raster)
 
 
