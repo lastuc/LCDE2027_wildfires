@@ -2,13 +2,7 @@
 #                     5. Exposures and risk calculation                       #
 #-----------------------------------------------------------------------------#
 
-library(tidyverse)
-library(terra)
-library(data.table)
-library(here)
-
-# pathroot <- "/PROJECTES/AIRPOLLUTION/lara/LCDE2027_wildfires/"
-pathroot <- ""
+pathroot <- "/PROJECTES/AIRPOLLUTION/lara/LCDE2027_wildfires/"
 
 
 # 1. Exposure Function ----
@@ -16,22 +10,12 @@ pathroot <- ""
 expo_aggr <- function(expofile, yearint){
 
   expodata <- fread(expofile)
+  
   # rename EEA subregion + UK as region
   setnames(expodata, "EEA_subregion", "region")
+  
   # Identify NUTS_2 codes with zero population
   zero_population_nuts <- names(which(tapply(expodata$population, expodata$NUTS_2, sum) == 0))
-  
-  # # Print NUTS_2 codes with zero population
-  # if(length(zero_population_nuts) > 0) {
-  #   print(zero_population_nuts)
-  #   stop("Some NUTS have a population of 0. Please revise the data.")
-  # }
-  # 
-  # # Read data + check
-  # expodata <- fread(expofile)
-  # if(any(tapply(expodata$population, expodata$NUTS_2, sum) == 0)){
-  #   stop("Some NUTS have a population of 0. Please revise the data.")
-  # }
 
   # Yearly exposure and risk by NUTS 2, population-weighted + spatial average
   expo_nuts2 <- copy(expodata)
@@ -63,18 +47,6 @@ expo_aggr <- function(expofile, yearint){
   expo_region$year <- yearint
   setDF(expo_region)
   
-  # # Yearly exposure and risk by EU, population-weighted + spatial average
-  # expo_eu <- copy(expodata)
-  # expo_eu <- expo_eu %>%
-  #   mutate(eu = ifelse(eu=="Member", "Member","Not EU")) # EU remove category "candidate"
-  # expo_eu[, popw := population/sum(population), by = .(eu, date)]
-  # expo_eu <- expo_eu[, .(pm25_pop = sum(popw*pm25), pm25_spatial = mean(pm25)),
-  #                            by = .(eu, date)]
-  # expo_eu <- expo_eu[, .(pm25_pop = mean(pm25_pop), pm25_spatial = mean(pm25_spatial)),
-  #                            by = .(eu)]
-  # expo_eu$year <- yearint
-  # setDF(expo_eu)
-
   # Europe-wide early exposure and risk, population-weighted + spatial average
   expo_euro <- copy(expodata)
   expo_euro[, popw := population/sum(population), by = .(date)]
@@ -88,7 +60,6 @@ expo_aggr <- function(expofile, yearint){
   list("expo_nuts2" = expo_nuts2,
        "expo_country" = expo_country,
        "expo_region" = expo_region,
-       # "expo_eu" = expo_eu,
        "expo_euro" = expo_euro)
 }
 
@@ -142,14 +113,6 @@ expo_region <- bind_rows(expo03[[3]], expo04[[3]], expo05[[3]], expo06[[3]], exp
                          expo18[[3]], expo19[[3]], expo20[[3]], expo21[[3]], expo22[[3]],
                          expo23[[3]], expo24[[3]], expo25[[3]])
 write_csv(expo_region, paste0(pathroot, "data/processed/pm25_region.csv"))
-
-# # Yearly exposure and risk by EU vs non_EU, population-weighted + spatial average
-# expo_eu <- bind_rows(expo03[[4]], expo04[[4]], expo05[[4]], expo06[[4]], expo07[[4]],
-#                      expo08[[4]], expo09[[4]], expo10[[4]], expo11[[4]], expo12[[4]],
-#                      expo13[[4]], expo14[[4]], expo15[[4]], expo16[[4]], expo17[[4]],
-#                      expo18[[4]], expo19[[4]], expo20[[4]], expo21[[4]], expo22[[4]],
-#                      expo23[[4]], expo24[[4]])
-# write_csv(expo_eu, paste0(pathroot, "data/processed/pm25_eu.csv"))
 
 # Europe-wide yearly exposure and risk, population-weighted + spatial average
 expo_euro <- bind_rows(expo03[[4]], expo04[[4]], expo05[[4]], expo06[[4]], expo07[[4]],
