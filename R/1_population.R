@@ -5,6 +5,7 @@
 
 pathroot <- "/PROJECTES/AIRPOLLUTION/lara/LCDE2027_wildfires/"
 
+
 # 1. Clean ----
 
 ## GEOSTAT 2006 ----
@@ -164,14 +165,11 @@ rm("pop03_raster","pop04_raster","pop05_raster",
 popall <- approximate(popall, method = "linear", rule = 2)
 
 
-# 4. Write ----
+# 4. Save ----
 
 write_rds(popall, paste0(pathroot, "data/processed/population_yearly.rds"))
 writeRaster(popall, paste0(pathroot, "data/processed/population_yearly.tif"),overwrite=T)
 
-# check availability
-pop[pop == 0] <- NA
-plot(pop)
 
 # Clean
 rm(list=ls())
