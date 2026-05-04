@@ -18,8 +18,10 @@ pathroot <- "/PROJECTES/AIRPOLLUTION/lara/LCDE2027_wildfires/"
 
 # Read data
 mort <- fread(paste0(pathroot, "data/raw/mortality/estat_demo_r_mwk2_ts.tsv"))
+
 # Take years 2003-2024
 mort <- dplyr::select(mort, 1, contains(as.character(2003:2025)))
+
 # Disentangle 1st column, take both sexes and NUTS codes
 names(mort)[1] <- "meta"
 mort <- group_by(mort, meta) %>% 
@@ -29,6 +31,7 @@ mort <- group_by(mort, meta) %>%
   filter(sex == "T") %>% 
   filter(nchar(NUTS_mort)==4|(nchar(NUTS_mort)==3 & grepl("DE|IE|HR|SI", NUTS_mort))) %>% 
   dplyr::select(-meta, -sex)
+
 # Wide to long format, parse NAs and remove provisional flags
 mort <- pivot_longer(mort, -NUTS_mort, names_to = "week", values_to = "deaths")
 mort <- mutate(mort,
