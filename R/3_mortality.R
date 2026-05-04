@@ -3,7 +3,7 @@
 #-----------------------------------------------------------------------------#
 
 
-# Warning:
+# Information:
 # Germany (DE), Ireland (IE), Croatia (HR), Slovenia (SI) available at the NUTS1 level
 # No data for Macedonia (MK)
 # The rest of the countries are available at NUTS 2 level
