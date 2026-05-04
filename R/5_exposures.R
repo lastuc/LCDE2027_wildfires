@@ -5,7 +5,7 @@
 pathroot <- "/PROJECTES/AIRPOLLUTION/lara/LCDE2027_wildfires/"
 
 
-# 1. Exposure Function ----
+# 1. Exposure function ----
 
 expo_aggr <- function(expofile, yearint){
 
