@@ -3,7 +3,7 @@
 #-----------------------------------------------------------------------------#
 
 
-# pathroot <- "/PROJECTES/AIRPOLLUTION/lara/LCDE2027_wildfires/"
+pathroot <- "/PROJECTES/AIRPOLLUTION/lara/LCDE2027_wildfires/"
 
 
 # 1. Read and split by NUTS level ----
