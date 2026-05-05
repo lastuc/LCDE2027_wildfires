@@ -86,7 +86,7 @@ pop21 <- st_transform(pop21, crs = 4326)
 
 # 2. Rasterize ----
 
-gridgeom <- rast("data/raw/SILAM/europeFirePM25-MODIS-2003to2025DayMean.nc4", lyrs = 1)
+gridgeom <- rast(paste0(pathroot, "data/raw/SILAM/europeFirePM25-MODIS-2003to2025DayMean.nc4"), lyrs = 1)
 
 ## GEOSTAT 2006 ----
 pop06_raster <- rasterize(vect(pop06), gridgeom, field="POP06", fun=sum, background=0)
